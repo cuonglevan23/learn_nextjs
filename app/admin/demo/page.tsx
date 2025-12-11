@@ -9,8 +9,6 @@ const Demo1 = () => {
     <div>
         <h1>Demo Page</h1>
         <p>This is a demo page under admin section.</p>
-        <button onClick={() => handle_btn_click()}
-        >Back </button>
        
     </div>
   );
