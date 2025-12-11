@@ -1,8 +1,17 @@
+'use client';
+import { useRouter } from "next/navigation";
 const Demo1 = () => {
+    const router = useRouter();
+    const handle_btn_click = () => {
+      router.push("/");
+      }
   return (
     <div>
-      <h1>Demo Page 1</h1>
-      <p>This is the first demo page.</p>
+        <h1>Demo Page</h1>
+        <p>This is a demo page under admin section.</p>
+        <button onClick={() => handle_btn_click()}
+        >Back </button>
+       
     </div>
   );
 };
