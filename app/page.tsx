@@ -1,8 +1,23 @@
-import Link from "next/link";
+"use client";
 
-
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    // Fetch data from the backend API
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/blogs");
+        const data = await response.json();
+        console.log("Fetched data:", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
   return (
     <div>
       
