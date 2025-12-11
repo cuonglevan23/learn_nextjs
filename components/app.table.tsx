@@ -1,15 +1,31 @@
 
 "use client";
-
-import { table } from "console";
-
+import { useState } from "react";
+import Modal from "./create.modal";
 interface IPops{
  blogs?: IBlog[];   
 }
 const AppTable = (props: IPops) => {
+    const [showModal, setShowModal] = useState(false);
+
+    const handleClose = () => {
+        setShowModal(false);
+    }
+    const handleOpen = () => {
+        setShowModal(true);
+    }
     const Blogs = props.blogs;
     return (
-       < table className="min-w-full bg-white border border-gray-900 text-blue-700">
+        <>
+        <div className="text-2xl text-blue-900 font-bold mb-4">Blog Management Table</div>
+     <button
+        onClick={handleOpen}
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
+      >
+        Create New Blog
+      </button>
+         < table className="min-w-full bg-white border border-gray-900 text-blue-700">
+           <Modal showModal={showModal} handleClose={handleClose} />
         <thead>
           <tr>
             <th className="py-2 px-4 border-b border-gray-900">ID</th>
@@ -44,6 +60,8 @@ const AppTable = (props: IPops) => {
             })}
        </tbody>
       </table>
+      </>
+      
     )
 }
 
