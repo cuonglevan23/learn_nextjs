@@ -1,61 +1,117 @@
 "use client";
+import { title } from "process";
 import { useState } from "react";
-
+import { toast } from 'react-toastify';
 interface IModalProps {
     showModal: boolean;
     handleClose: (value: boolean) => void;
 }
 
-const Modal = (props: IModalProps) => {
-    const { showModal, handleClose } = props;
+const Modal = ({ showModal, handleClose }: IModalProps) => {
+  
+    const [title, setTitle] = useState("");
+    const [author, setAuthor] = useState("");
+    const [content, setContent] = useState("");
 
+
+    
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault(); // 🛑 NGĂN form reload trang
+        // XỬ LÝ DỮ LIỆU Ở ĐÂY
+        const newBlog = {
+            auther: author,
+            title: title,
+            content: content
+        };
+
+        fetch('http://localhost:8000/blogs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newBlog),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            toast.success("Blog created successfully!");
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            toast.error("Failed to create blog.");
+        });
+
+        setTitle("");
+        setAuthor("");
+        setContent("");
+
+        handleClose(false);
+    };
+
+    const cancelModal = () => {
+        setTitle("");
+        setAuthor("");
+        setContent("");
+        handleClose(false);
+    }
 
     return (
-        <div>
-            <h2>Create New Blog</h2>
+        <>
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm">
 
-                    <div className="bg-white p-6 rounded shadow-lg">
-                        <h3 className="text-xl mb-4">New Blog Form</h3>
-                        <form>
+                    <div className="bg-white p-6 rounded shadow-lg w-[400px]">
+                        <h3 className="text-xl mb-4 font-semibold">New Blog</h3>
+
+                        <form onSubmit={handleSubmit}>
+                            
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">
-                                    Author
-                                </label>
+                                <label className="block mb-1">Author</label>
                                 <input
+                                    value={author}
+                                    onChange={(e) => setAuthor(e.target.value)}
                                     type="text"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                </input>
+                                    className="border rounded w-full px-3 py-2"
+                                />
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">
-                                    Title
-                                </label>
+                                <label className="block mb-1">Title</label>
                                 <input
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
                                     type="text"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                </input>
+                                    className="border rounded w-full px-3 py-2"
+                                />
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">
-                                    Content
-                                </label>
+                                <label className="block mb-1">Content</label>
                                 <textarea
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                </textarea>
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    className="border rounded w-full px-3 py-2"
+                                />
                             </div>
-                            <div className="flex justify-end">
+
+                            <div className="flex justify-end gap-3">
                                 <button
                                     type="button"
-                                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
-                                    onClick={() => handleClose(false)}
+                                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                                    onClick={cancelModal}
                                 >
                                     Cancel
                                 </button>
+
                                 <button
+                                   
                                     type="submit"
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                                 >
                                     Create
                                 </button>
@@ -63,10 +119,9 @@ const Modal = (props: IModalProps) => {
                         </form>
                     </div>
                 </div>
-
             )}
-        </div>
+        </>
     );
-}
+};
 
 export default Modal;

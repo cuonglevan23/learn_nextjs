@@ -11,9 +11,7 @@ interface IBlog{
 export default function Home() {
   const { data, error, isLoading } = useSWR('http://localhost:8000/blogs', fetcher)
   
-  console.log("SWR data:", data);
-  console.log("SWR error:", error);
-  console.log("SWR isLoading:", isLoading);
+ 
 
   // useEffect(() => {
   //   // Fetch data from the backend API
